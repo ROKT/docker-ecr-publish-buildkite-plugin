@@ -47,7 +47,7 @@ enable_disable_inline_cache() {
   fi
 
   if [[ "$enable_inline_cache" == "1" ]]; then
-    build_args+=('--build-arg' "BUILDKITE_INLINE_CACHE=1")
+    build_args+=('--build-arg' "BUILDKIT_INLINE_CACHE=1")
   fi
 }
 
