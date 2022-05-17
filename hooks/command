@@ -215,7 +215,6 @@ target="${BUILDKITE_PLUGIN_DOCKER_ECR_PUBLISH_TARGET:-}"
 enable_buildkit=0
 build_args=()
 caches_from=()
-progress_output=()
 tags=("${BUILDKITE_BUILD_NUMBER}")
 
 regions=()
