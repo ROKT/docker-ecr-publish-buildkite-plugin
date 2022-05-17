@@ -32,7 +32,7 @@ read_build_driver() {
   if read_list_property "${property}"; then
     for arg in "${result[@]}"; do
       if [[ "$arg" == "buildkit" ]]; then
-        echo "Chosing driver: buildkite"
+        echo "Chosing driver: buildkit"
         enable_buildkit=1
       else 
         echo "Chosing driver: legacy"
@@ -57,7 +57,7 @@ read_build_driver() {
   if read_list_property "${property}"; then
     for arg in "${result[@]}"; do
       if [[ "$arg" == "true" ]]; then
-        echo "Setting progress output to: ${arg}"
+        echo "Setting use cache metadata to: ${arg}"
         build_args+=('--build-arg' "BUILKIT_INLINE_CACHE=1")
         break
       fi
