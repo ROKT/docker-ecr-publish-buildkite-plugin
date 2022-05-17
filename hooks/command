@@ -37,17 +37,22 @@ enable_disable_buildkit() {
 }
 
 enable_disable_inline_cache() { 
-  local property="BUILDKIT_INLINE_CACHE"
+  local property="BUILDKIT_CACHE"
   if read_list_property "${property}"; then
     for arg in "${result[@]}"; do
       if [[ "$arg" == "false" ]]; then
+        echo "disable inline cache"
         enable_inline_cache=0
       fi
     done
   fi
 
   if [[ "$enable_inline_cache" == "1" ]]; then
+    echo "enable inline cache"
     build_args+=('--build-arg' "BUILDKIT_INLINE_CACHE=1")
+  else 
+    echo "disable inline cache"
+    build_args+=('--build-arg' "BUILDKIT_INLINE_CACHE=0")
   fi
 }
 
@@ -246,7 +251,7 @@ echo "Dockerfile: ${dockerfile}"
 echo "Build context: ${build_context}"
 echo "Target: ${target}"
 DOCKER_BUILDKIT=${enable_buildkit} \
-docker build \
+  docker build \
   --file "${dockerfile}" \
   --tag "${BUILDKITE_PLUGIN_DOCKER_ECR_PUBLISH_ECR_NAME}" \
   ${BUILDKITE_PLUGIN_DOCKER_ECR_PUBLISH_ADDITIONAL_BUILD_ARGS:-} \
