@@ -53,10 +53,12 @@ read_build_driver() {
         if read_list_property "${property}"; then
           for arg in "${result[@]}"; do
             echo "Setting progress output to: ${arg}"
-            build_args+=('--progress' "${arg}")
+            progress_output="${arg}"
             break
           done
         fi
+        
+        build_args+=('--progress' "${arg}")
 
       else 
         echo "Chosing driver: legacy"
