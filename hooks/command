@@ -34,32 +34,33 @@ read_build_driver() {
       if [[ "$arg" == "buildkit" ]]; then
         echo "Chosing driver: buildkit"
         enable_buildkit=1
+
+        # read cache metadata settings if driver=buildkit
+        property="USE_CACHE_METADATA"
+        if read_list_property "${property}"; then
+          for arg in "${result[@]}"; do
+            if [[ "$arg" == "true" ]]; then
+              echo "Setting use cache metadata to: ${arg}"
+              build_args+=('--build-arg' "BUILKIT_INLINE_CACHE=1")
+              break
+            fi
+          done
+        fi
+
+        # read progress output if driver=buildkit
+        property="PROGRESS_OUTPUT"
+        progress_output="plain" # set default
+        if read_list_property "${property}"; then
+          for arg in "${result[@]}"; do
+            echo "Setting progress output to: ${arg}"
+            build_args+=('--progress' "${arg}")
+            break
+          done
+        fi
+
       else 
         echo "Chosing driver: legacy"
         enable_buildkit=0
-      fi
-    done
-  fi
-
-  # read progress output if driver=buildkit
-  property="PROGRESS_OUTPUT"
-  progress_output="plain" # set default
-  if read_list_property "${property}"; then
-    for arg in "${result[@]}"; do
-      echo "Setting progress output to: ${arg}"
-      progress_output="${arg}"
-      break
-    done
-  fi
-
-  # read cache metadata settings if driver=buildkit
-  property="USE_CACHE_METADATA"
-  if read_list_property "${property}"; then
-    for arg in "${result[@]}"; do
-      if [[ "$arg" == "true" ]]; then
-        echo "Setting use cache metadata to: ${arg}"
-        build_args+=('--build-arg' "BUILKIT_INLINE_CACHE=1")
-        break
       fi
     done
   fi
@@ -252,6 +253,7 @@ echo '--- Building Docker image'
 if [[ -n ${BUILDKITE_PLUGIN_DOCKER_ECR_PUBLISH_ADDITIONAL_BUILD_ARGS:-} ]]; then
   echo "Additional build args: ${BUILDKITE_PLUGIN_DOCKER_ECR_PUBLISH_ADDITIONAL_BUILD_ARGS}"
 fi
+echo "Buildkit:" ${enable_buildkit}
 echo "Build args:" ${build_args[@]+"${build_args[@]}"}
 echo "Cache from:" ${caches_from[@]+"${caches_from[@]}"}
 echo "Dockerfile: ${dockerfile}"
@@ -263,7 +265,6 @@ DOCKER_BUILDKIT=${enable_buildkit} \
   --tag "${BUILDKITE_PLUGIN_DOCKER_ECR_PUBLISH_ECR_NAME}" \
   ${BUILDKITE_PLUGIN_DOCKER_ECR_PUBLISH_ADDITIONAL_BUILD_ARGS:-} \
   ${build_args[@]+"${build_args[@]}"} \
-  --progress=${progress_output} \
   ${caches_from[@]+"${caches_from[@]}"} \
   ${target_arg} \
   "${build_context}"
