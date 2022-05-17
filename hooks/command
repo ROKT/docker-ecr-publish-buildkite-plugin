@@ -25,34 +25,43 @@ read_build_args() {
   fi
 }
 
-enable_disable_buildkit() { 
-  local property="BUILDKIT_ENABLE"
+read_build_driver() { 
+  # read driver
+  local property="DRIVER"
+  enable_buildkit=0 # set default
   if read_list_property "${property}"; then
     for arg in "${result[@]}"; do
-      if [[ "$arg" == "false" ]]; then
+      if [[ "$arg" == "buildkit" ]]; then
+        echo "Chosing driver: buildkite"
+        enable_buildkit=1
+      else 
+        echo "Chosing driver: legacy"
         enable_buildkit=0
       fi
     done
   fi
-}
 
-enable_disable_inline_cache() { 
-  local property="BUILDKIT_CACHE"
+  # read progress output if driver=buildkit
+  property="PROGRESS_OUTPUT"
+  progress_output="plain" # set default
   if read_list_property "${property}"; then
     for arg in "${result[@]}"; do
-      if [[ "$arg" == "false" ]]; then
-        echo "disable inline cache"
-        enable_inline_cache=0
-      fi
+      echo "Setting progress output to: ${arg}"
+      progress_output="${arg}"
+      break
     done
   fi
 
-  if [[ "$enable_inline_cache" == "1" ]]; then
-    echo "enable inline cache"
-    build_args+=('--build-arg' "BUILDKIT_INLINE_CACHE=1")
-  else 
-    echo "disable inline cache"
-    build_args+=('--build-arg' "BUILDKIT_INLINE_CACHE=0")
+  # read cache metadata settings if driver=buildkit
+  property="USE_CACHE_METADATA"
+  if read_list_property "${property}"; then
+    for arg in "${result[@]}"; do
+      if [[ "$arg" == "true" ]]; then
+        echo "Setting progress output to: ${arg}"
+        build_args+=('--build-arg' "BUILKIT_INLINE_CACHE=1")
+        break
+      fi
+    done
   fi
 }
 
@@ -200,16 +209,14 @@ build_context="${BUILDKITE_PLUGIN_DOCKER_ECR_PUBLISH_BUILD_CONTEXT:-.}"
 target="${BUILDKITE_PLUGIN_DOCKER_ECR_PUBLISH_TARGET:-}"
 
 # by default enable buildkit
-enable_buildkit=1
-# by default eanble inline cache export import
-enable_inline_cache=1
+enable_buildkit=0
 build_args=()
 caches_from=()
+progress_output=()
 tags=("${BUILDKITE_BUILD_NUMBER}")
 
 regions=()
-enable_disable_buildkit
-enable_disable_inline_cache
+read_build_driver
 read_build_args 'ARGS'
 read_tags 'TAGS'
 
@@ -256,6 +263,7 @@ DOCKER_BUILDKIT=${enable_buildkit} \
   --tag "${BUILDKITE_PLUGIN_DOCKER_ECR_PUBLISH_ECR_NAME}" \
   ${BUILDKITE_PLUGIN_DOCKER_ECR_PUBLISH_ADDITIONAL_BUILD_ARGS:-} \
   ${build_args[@]+"${build_args[@]}"} \
+  --progress=${progress_output} \
   ${caches_from[@]+"${caches_from[@]}"} \
   ${target_arg} \
   "${build_context}"
