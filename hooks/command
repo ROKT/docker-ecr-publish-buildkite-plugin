@@ -36,16 +36,19 @@ read_build_driver() {
         enable_buildkit=1
 
         # read cache metadata settings if driver=buildkit
-        property="USE_CACHE_METADATA"
+        property="DISABLE_CACHE_METADATA"
+        enable_cache_metadata=1
         if read_list_property "${property}"; then
           for arg in "${result[@]}"; do
             if [[ "$arg" == "true" ]]; then
-              echo "Setting use cache metadata to: ${arg}"
-              build_args+=('--build-arg' "BUILKIT_INLINE_CACHE=1")
+              echo "Disabling metadata"
+              enable_cache_metadata=0
               break
             fi
           done
         fi
+        
+        build_args+=('--build-arg' "BUILKIT_INLINE_CACHE=${enable_cache_metadata}")
 
         # read progress output if driver=buildkit
         property="PROGRESS_OUTPUT"

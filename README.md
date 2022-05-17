@@ -268,12 +268,12 @@ steps:
   Specify the progress output format,
   e.g. `progress-output: tty`.
 
-- `use-cache-metadata` (optional, string)
+- `disable-cache-metadata` (optional, string)
   > Only takes effect if `driver: buildkit`  
   > Default `false`
 
-  Use cache layers from an image previously built and listed in `cache-from` property. This can reduce time taken to build an image efficiently if the docker file is written correctly taking benefit of multilayer build,
-  e.g. `use-cache-metadata: true`.
+  Recommendation is to keep it `false`. Docker buildkit uses cached layers from a previously built image and listed in `cache-from` property. This greatly reduces time taken to build an image. Turning cache metadata off might significantly increase build time.
+  e.g. `disable-cache-metadata: true`.
 
 ## License
 
