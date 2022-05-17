@@ -42,7 +42,7 @@ configuration:
     driver:
       type: string
       enum: ["legacy", "buildkit"]
-    use-cache-metadata:
+    disable-cache-metadata:
       type: boolean
     progress-output:
       type: string
