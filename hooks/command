@@ -48,7 +48,7 @@ read_build_driver() {
           done
         fi
         
-        build_args+=('--build-arg' "BUILKIT_INLINE_CACHE=${enable_cache_metadata}")
+        build_args+=('--build-arg' "BUILDKIT_INLINE_CACHE=${enable_cache_metadata}")
 
         # read progress output if driver=buildkit
         property="PROGRESS_OUTPUT"
