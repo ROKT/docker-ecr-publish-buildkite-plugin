@@ -127,14 +127,14 @@ This plugin can be used in combination with the [Docker ECR Cache](https://githu
 steps:
   - command: npm test
     plugins:
-      - ROKT/docker-ecr-cache#v1.7.0:
+      - ROKT/docker-ecr-cache#v2.2.0:
           ecr-name: my-cache
           target: deps
       - docker#v3.5.0:
           volumes:
             - /workdir/node_modules
   - plugins:
-      - ROKT/docker-ecr-cache#v1.7.0:
+      - ROKT/docker-ecr-cache#v2.2.0:
           ecr-name: my-cache
           target: deps
       - ROKT/docker-ecr-publish#v2.5.0:
