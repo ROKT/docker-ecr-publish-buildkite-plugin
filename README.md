@@ -2,7 +2,7 @@
 
 [![GitHub Release](https://img.shields.io/github/release/ROKT/docker-ecr-publish-buildkite-plugin.svg)](https://github.com/ROKT/docker-ecr-publish-buildkite-plugin/releases)
 
-A [Buildkite plugin](https://buildkite.com/docs/agent/v3/plugins) to build, tag, and push Docker images to Amazon ECR. Based on [ROKT/docker-ecr-publish-buildkite-plugin](https://github.com/ROKT/docker-ecr-publish-buildkite-plugin) which is no longer supported.
+A [Buildkite plugin](https://buildkite.com/docs/agent/v3/plugins) to build, tag, and push Docker images to Amazon ECR. Based on [seek-oss/docker-ecr-publish-buildkite-plugin](https://github.com/seek-oss/docker-ecr-publish-buildkite-plugin) which is no longer supported.
 
 ## Example
 
