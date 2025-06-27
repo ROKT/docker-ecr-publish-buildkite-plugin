@@ -3,11 +3,7 @@ info:
   title: Docker Ecr Publish Buildkite Plugin
   x-cortex-tag: docker-ecr-publish-buildkite-plugin
   x-cortex-type: infra
-  description: 'A Buildkite plugin to build, tag, and push Docker images to Amazon
-    ECR. Based on seek-oss/docker-ecr-publish-buildkite-plugin which is no longer
-    supported.
-
-    '
+  description: 'A Buildkite plugin to build, tag, and push Docker images to Amazon ECR. Based on seek-oss/docker-ecr-publish-buildkite-plugin which is no longer supported.'
   x-cortex-git:
     github:
       repository: ROKT/docker-ecr-publish-buildkite-plugin
